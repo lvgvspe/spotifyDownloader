@@ -54,11 +54,15 @@ namespace SpotifyDownloader
                         id.Add(result.Id);
                         break;
                     }
-                    var video = await youtube.Videos.GetAsync($"{id[0]}");
-                    string regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
-                    Regex r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
-                    string title = r.Replace(video.Title, "");
-                    await youtube.Videos.DownloadAsync(id[0], $@"{textBox2.Text}\{folder.InnerHtml}\{title}.mp3");
+                    try
+                    {
+                        var video = await youtube.Videos.GetAsync($"{id[0]}");
+                        string regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
+                        Regex r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
+                        string title = r.Replace(video.Title, "");
+                        await youtube.Videos.DownloadAsync(id[0], $@"{textBox2.Text}\{folder.InnerHtml}\{title}.mp3");
+                    }
+                    catch { }
                     progressBar1.Value++;
                 }
             }
