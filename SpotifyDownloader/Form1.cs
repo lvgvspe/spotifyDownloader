@@ -30,7 +30,12 @@ namespace SpotifyDownloader
                 HtmlWeb web = new();
                 var doc = web.Load(url);
                 var music = doc.DocumentNode.SelectNodes("//a[contains(@class, 'EntityRowV2__Link-sc-ayafop-8')]");
-                var artist = doc.DocumentNode.SelectNodes("//span[contains(@class, 'Mesto-sc-1e7huob-0')]/a");
+                var span = doc.DocumentNode.SelectNodes("//span[contains(@class, 'Mesto-sc-1e7huob-0')]");
+                List<HtmlAgilityPack.HtmlNode> artist = new();
+                foreach (var s in span)
+                {
+                    artist.Add(s.FirstChild);
+                }
                 var list = music.Zip(artist, (m, a) => new { music = m, artist = a });
                 var folder = doc.DocumentNode.SelectSingleNode("//h1[contains(@class, 'Type__TypeElement-goli3j-0')]");
                 if (!Directory.Exists($@"{textBox2.Text}\{folder.InnerHtml}"))
