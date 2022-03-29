@@ -1,4 +1,5 @@
 using HtmlAgilityPack;
+using System.Text.RegularExpressions;
 using YoutubeExplode;
 using YoutubeExplode.Converter;
 
@@ -49,7 +50,10 @@ namespace SpotifyDownloader
                         break;
                     }
                     var video = await youtube.Videos.GetAsync($"{id[0]}");
-                    await youtube.Videos.DownloadAsync(id[0], $@"{textBox2.Text}\{folder.InnerHtml}\{video.Title}.mp3");
+                    string regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
+                    Regex r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
+                    string title = r.Replace(video.Title, "");
+                    await youtube.Videos.DownloadAsync(id[0], $@"{textBox2.Text}\{folder.InnerHtml}\{title}.mp3");
                     progressBar1.Value++;
                 }
             }
